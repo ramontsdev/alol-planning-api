@@ -1,5 +1,7 @@
-import { findByUsername } from "@/repository/find-by-username";
 import { Request, Response } from "express";
+import jwt from 'jsonwebtoken';
+
+import { findByUsername } from "@/repository/find-by-username";
 
 export async function signInController(request: Request, response: Response) {
   const requiredFields = ['username', 'password']
@@ -21,12 +23,16 @@ export async function signInController(request: Request, response: Response) {
     return response.status(400).json({ error: 'A senha está incorreta' })
   }
 
-  const userResponse = {
+  const token = jwt.sign({ id: user.id }, 'secretaria', {
+    expiresIn: 60 * 60 * 48 // 48 horas
+  })
+
+  const userData = {
     id: user.id,
     name: user.name,
     username: user.username,
     email: user.email,
   }
 
-  return response.json(userResponse)
+  return response.json({ token, userData })
 }

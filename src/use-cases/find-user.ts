@@ -1,7 +1,7 @@
 import { findById } from "@/repository/find-by-id";
 import { Request, Response } from "express";
 
-export async function findUser(request: Request, response: Response) {
+export async function findUserController(request: Request, response: Response) {
   const { userId } = request.params
   const user = await findById(userId)
 
